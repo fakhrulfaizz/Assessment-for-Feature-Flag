@@ -294,6 +294,10 @@ button {
   gap: 8px;
 }
 
+.field--search {
+  padding-bottom: 12px;
+}
+
 .field span {
   font-weight: 600;
   color: var(--text);

@@ -337,7 +337,7 @@ export default function App() {
             </span>
           </div>
 
-          <label className="field">
+          <label className="field field--search">
             <span>Search features</span>
             <input
               value={search}
