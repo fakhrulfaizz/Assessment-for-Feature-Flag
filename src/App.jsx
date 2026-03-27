@@ -40,6 +40,11 @@ const sourceLabels = {
   user_override: 'User override',
 };
 
+const [errors, setErrors] = useState({
+  key: "",
+});
+
+
 export default function App() {
   const [dashboard, setDashboard] = useState(emptyDashboard);
   const [selectedFeatureKey, setSelectedFeatureKey] = useState('');
@@ -359,14 +364,30 @@ export default function App() {
                 <span>Feature key</span>
                 <input
                   value={createForm.key}
-                  onChange={(event) =>
+                  onChange={(event) => {
+                    const value = event.target.value;
+
                     setCreateForm((current) => ({
                       ...current,
-                      key: event.target.value,
-                    }))
-                  }
-                  placeholder="example: staged-pricing-banner"
+                      key: value,
+                    }));
+
+                    if (value && !/^[a-zA-Z0-9-]+$/.test(value)) {
+                      setErrors((current) => ({
+                        ...current,
+                        key: "Only letters, numbers, and hyphens are allowed.",
+                      }));
+                    } else {
+                      setErrors((current) => ({
+                        ...current,
+                        key: "",
+                      }));
+                    }
+                  }}
+                  placeholder="example: stagedpricingbanner"
                 />
+
+                {errors.key && <small className="error-text">{errors.key}</small>}
               </label>
 
               <label className="field">

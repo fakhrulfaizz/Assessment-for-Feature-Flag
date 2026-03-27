@@ -639,3 +639,11 @@ button {
     border-radius: 24px;
   }
 }
+
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
