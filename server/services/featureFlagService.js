@@ -5,7 +5,7 @@ import {
   ValidationError,
 } from '../domain/errors.js';
 
-const KEY_PATTERN = /^[a-z0-9][a-z0-9-_]*$/;
+const KEY_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
 
 function normalizeKey(value, fieldName) {
   if (typeof value !== 'string') {
@@ -20,7 +20,7 @@ function normalizeKey(value, fieldName) {
 
   if (!KEY_PATTERN.test(normalized)) {
     throw new ValidationError(
-      `${fieldName} must use lowercase letters, numbers, hyphens, or underscores.`,
+      `${fieldName} must use lowercase letters, numbers, and hyphens only.`,
     );
   }
 

@@ -40,9 +40,21 @@ const sourceLabels = {
   user_override: 'User override',
 };
 
-const [errors, setErrors] = useState({
-  key: "",
-});
+const featureKeyPattern = /^[a-z0-9-]+$/;
+
+function getFeatureKeyError(value) {
+  const normalized = value.trim().toLowerCase();
+
+  if (!normalized) {
+    return '';
+  }
+
+  if (!featureKeyPattern.test(normalized)) {
+    return 'Only letters, numbers, and hyphens are allowed.';
+  }
+
+  return '';
+}
 
 
 export default function App() {
@@ -58,6 +70,7 @@ export default function App() {
   const [notice, setNotice] = useState('');
 
   const deferredSearch = useDeferredValue(search);
+  const featureKeyError = getFeatureKeyError(createForm.key);
 
   const selectedFeature =
     dashboard.features.find((feature) => feature.key === selectedFeatureKey) ?? null;
@@ -154,9 +167,14 @@ export default function App() {
 
   async function handleCreateFeature(event) {
     event.preventDefault();
-    setBusyAction('create-feature');
     setError('');
     setNotice('');
+
+    if (featureKeyError) {
+      return;
+    }
+
+    setBusyAction('create-feature');
 
     try {
       const createdFeature = await api.createFeature(createForm);
@@ -364,30 +382,19 @@ export default function App() {
                 <span>Feature key</span>
                 <input
                   value={createForm.key}
+                  aria-invalid={Boolean(featureKeyError)}
                   onChange={(event) => {
-                    const value = event.target.value;
-
                     setCreateForm((current) => ({
                       ...current,
-                      key: value,
+                      key: event.target.value.toLowerCase(),
                     }));
-
-                    if (value && !/^[a-zA-Z0-9-]+$/.test(value)) {
-                      setErrors((current) => ({
-                        ...current,
-                        key: "Only letters, numbers, and hyphens are allowed.",
-                      }));
-                    } else {
-                      setErrors((current) => ({
-                        ...current,
-                        key: "",
-                      }));
-                    }
                   }}
-                  placeholder="example: stagedpricingbanner"
+                  placeholder="example: staged-pricing-banner"
                 />
 
-                {errors.key && <small className="error-text">{errors.key}</small>}
+                {featureKeyError ? (
+                  <small className="error-text">{featureKeyError}</small>
+                ) : null}
               </label>
 
               <label className="field">
@@ -424,7 +431,11 @@ export default function App() {
               <button
                 type="submit"
                 className="solid-button solid-button--wide"
-                disabled={Boolean(busyAction)}
+                disabled={
+                  Boolean(busyAction) ||
+                  !createForm.key.trim() ||
+                  Boolean(featureKeyError)
+                }
               >
                 Create feature
               </button>

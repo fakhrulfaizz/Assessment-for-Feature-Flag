@@ -55,7 +55,7 @@ The seeded scenarios intentionally cover the most important evaluation paths:
 
 ## Assumptions
 
-- Feature keys, user keys, and group keys are normalized to lowercase machine-friendly identifiers.
+- Feature keys are normalized to lowercase and accept letters, numbers, and hyphens only.
 - If a user is provided during evaluation and no explicit group is supplied, the engine uses the user's stored group automatically.
 - If both a user and a group are supplied, they must agree with the user's actual group membership.
 
